@@ -4,14 +4,14 @@ import Shader from './shader'
 var canvas = null;
 
 export default class Texture {
-  
+
   static fromElement(element) {
     var gl = store.get('gl')
     var texture = new Texture(0, 0, gl.RGBA, gl.UNSIGNED_BYTE);
     texture.loadContentsOf(element);
     return texture;
   }
-  
+
   constructor(width, height, format, type) {
     var gl = store.get('gl')
     this.gl = gl;
@@ -28,7 +28,7 @@ export default class Texture {
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
     if (width && height) gl.texImage2D(gl.TEXTURE_2D, 0, this.format, width, height, 0, this.format, this.type, null);
   }
-  
+
   loadContentsOf(element) {
     var gl = store.get('gl')
     this.width = element.width || element.videoWidth;
@@ -36,7 +36,7 @@ export default class Texture {
     gl.bindTexture(gl.TEXTURE_2D, this.id);
     gl.texImage2D(gl.TEXTURE_2D, 0, this.format, this.format, this.type, element);
   }
-  
+
   initFromBytes(width, height, data) {
     var gl = store.get('gl')
     this.width = width;
@@ -46,25 +46,25 @@ export default class Texture {
     gl.bindTexture(gl.TEXTURE_2D, this.id);
     gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, width, height, 0, gl.RGBA, this.type, new Uint8Array(data));
   }
-  
+
   destroy() {
     var gl = store.get('gl')
     gl.deleteTexture(this.id);
     this.id = null;
   }
-  
+
   use(unit) {
     var gl = store.get('gl')
     gl.activeTexture(gl.TEXTURE0 + (unit || 0));
     gl.bindTexture(gl.TEXTURE_2D, this.id);
   }
-  
+
   unuse(unit) {
     var gl = store.get('gl')
     gl.activeTexture(gl.TEXTURE0 + (unit || 0));
     gl.bindTexture(gl.TEXTURE_2D, null);
   }
-  
+
   ensureFormat(width, height, format, type) {
     // allow passing an existing texture instead of individual arguments
     if (arguments.length == 1) {
@@ -86,7 +86,7 @@ export default class Texture {
       gl.texImage2D(gl.TEXTURE_2D, 0, this.format, width, height, 0, this.format, this.type, null);
     }
   }
-  
+
   drawTo(callback) {
     var gl = store.get('gl')
     // start rendering to this texture
@@ -104,7 +104,7 @@ export default class Texture {
     // stop rendering to this texture
     gl.bindFramebuffer(gl.FRAMEBUFFER, null);
   }
-  
+
   fillUsingCanvas(callback) {
     callback(getCanvas(this));
     var gl = store.get('gl')
@@ -144,7 +144,7 @@ function getCanvas(texture) {
   if (canvas == null) canvas = document.createElement('canvas');
   canvas.width = texture.width;
   canvas.height = texture.height;
-  var c = canvas.getContext('2d');
+  var c = canvas.getContext('2d', { preserveDrawingBuffer: true });
   c.clearRect(0, 0, canvas.width, canvas.height);
   return c;
 }

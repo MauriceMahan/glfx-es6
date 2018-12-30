@@ -127,7 +127,7 @@ export default {
   canvas() {
     var canvas = document.createElement('canvas');
     try {
-      store.set({gl: canvas.getContext('experimental-webgl', { premultipliedAlpha: false })});
+      store.set({gl: canvas.getContext('experimental-webgl', { preserveDrawingBuffer: true, premultipliedAlpha: false })});
     } catch (e) {
       store.set({gl: null});
     }
@@ -150,7 +150,7 @@ export default {
     canvas.replace = wrap(replace);
     canvas.contents = wrap(contents);
     canvas.getPixelArray = wrap(getPixelArray);
-    
+
     // // Filter methods
     canvas.brightnessContrast = wrap(filters.brightnessContrast);
     canvas.hexagonalPixelate = wrap(filters.hexagonalPixelate);

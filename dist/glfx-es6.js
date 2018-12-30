@@ -577,7 +577,7 @@ exports.default = {
   canvas: function canvas() {
     var canvas = document.createElement('canvas');
     try {
-      store.set({ gl: canvas.getContext('experimental-webgl', { premultipliedAlpha: false }) });
+      store.set({ gl: canvas.getContext('experimental-webgl', { preserveDrawingBuffer: true, premultipliedAlpha: false }) });
     } catch (e) {
       store.set({ gl: null });
     }
@@ -916,7 +916,7 @@ function getCanvas(texture) {
   if (canvas == null) canvas = document.createElement('canvas');
   canvas.width = texture.width;
   canvas.height = texture.height;
-  var c = canvas.getContext('2d');
+  var c = canvas.getContext('2d', { preserveDrawingBuffer: true });
   c.clearRect(0, 0, canvas.width, canvas.height);
   return c;
 }
